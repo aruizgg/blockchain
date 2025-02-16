@@ -14,6 +14,8 @@ type Block struct {
 	PrevHash  string
 }
 
+var Blockchain []Block
+
 func calculateHash(block Block) string {
 	concBlock := string(block.Index) + block.Timestamp + block.Data + block.PrevHash
 	hash := sha256.New()
@@ -42,5 +44,13 @@ func validateBlock(block Block) bool {
 		var prevBlock Block
 
 		return calculateHash(block) == block.Hash && prevBlock.Hash == block.PrevHash
+	}
+}
+
+// When two nodes have different blockchains, keep the longer one (most up to date)
+
+func checkBlockchainLength(newBlockchain []Block) {
+	if len(newBlockchain) > len(Blockchain) {
+		Blockchain = newBlockchain
 	}
 }
